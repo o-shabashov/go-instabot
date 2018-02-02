@@ -1,6 +1,8 @@
 ![Image](instagram.png)
 # Auto like my friends Instagram pics
 
+[![Build Status](https://travis-ci.org/o-shabashov/go-instabot.svg?branch=master)](https://travis-ci.org/o-shabashov/go-instabot)
+
 Bot to automatically like your friends' Instagram posts, and notify you on your Slack channel.
 
 ### Practical use cases
