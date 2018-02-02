@@ -7,13 +7,13 @@ import (
 	"log"
 	"math/rand"
 	"os"
+	"strings"
+	"time"
 
 	"github.com/ahmdrz/goinsta"
 	"github.com/ahmdrz/goinsta/store"
 	"github.com/ashwanthkumar/slack-go-webhook"
 	"github.com/joho/godotenv"
-	"strings"
-	"time"
 )
 
 var insta *goinsta.Instagram
@@ -101,7 +101,7 @@ func check(err error) {
 	}
 }
 
-// Send message to Slack
+// Slack send message
 func Slack(body string, success bool) {
 	status := func() string {
 		if success {
