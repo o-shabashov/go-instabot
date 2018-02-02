@@ -3,9 +3,11 @@
 *.dll
 *.so
 *.dylib
+.env
+.idea
+vendor
 
 # Local files
-local/
 key
 session
 
