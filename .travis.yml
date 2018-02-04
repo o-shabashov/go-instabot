@@ -22,9 +22,11 @@ matrix:
   # tests pass on the stable versions of Go.
   fast_finish: true
 
-# Don't email me the results of the test runs.
 notifications:
   email: false
+  slack:
+    rooms:
+      secure: QBxoL4pndpvCeeYMrNn+C6y28tOW0PDPDKASI+HaXI0wgbmngjj3MCB21zulcX2gWIhPylQ7qAFV09xhrOibZeNxlTb57PUJFGrk2jqbcuYEZtxNy2mvh34VEy+kPJYIs08BNUgUoL8EOsVxuPOJbk/uUlW2egqNL7Q2nGS3Ft2XwFwp+bkE3jDk6U5wKUG742dwx1cmsBziHz72FohmUXIZTvV7kJLr7Y+EFI+5l3KdjACYFHHvba6h7NjVwuBNaEr/pLUpRsy15ARWOZWClz+QrZxcjmelMsuf3r5Nbb+X94gEbIAKm1vTffJmjVsJVfo7bKL90fn7quuy3LWLgWfmbWAX3AbqRG/hw+3Juy4To1jcWdvzsXJ6P5CXJt9ndrkuHde3dvswYVrQhE/d25jPFSXD/1WKIB+KMr8//FG5/N88Qwqvc99P7+08Gr8INVy6mJDl8ty+PYd9lVocYiZ7s8oO2yIWhC6GUpiMHgBaBdh7j6BDfhiWCT83giCKfg2bEtnhK1jpNBncljpdUgRN3Ml+w22pPHrDudHsGvQz8EQ02vjlvNFNlahKuvrruKegqBRio6ZdDYWbDhaVln5JlG/zTkAy1TRNXdss6+ieKXlVBCbk4ZgP+WuVnYqpoTvWNVprZiS7PiGiGL6Ihqh3UqSF4w2/6zG1uQ2uxd0=
 
 # Anything in before_script that returns a nonzero exit code will
 # flunk the build and immediately stop. It's sorta like having
