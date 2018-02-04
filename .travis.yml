@@ -18,9 +18,8 @@ matrix:
   # It's ok if our code fails on unstable development versions of Go.
   allow_failures:
     - go: master
-  # Don't wait for tip tests to finish. Mark the test run green if the
-  # tests pass on the stable versions of Go.
-  fast_finish: true
+  # Wait for tip tests to finish, do not send multiple notifications
+  fast_finish: false
 
 notifications:
   email: false
