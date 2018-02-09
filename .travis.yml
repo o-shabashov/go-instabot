@@ -8,8 +8,6 @@ language: go
 # are allowed to fail on Go tip.
 go:
   - 1.9
-  env: LATEST=true
-  - master
 
 # Skip the install step. Don't `go get` dependencies. Only build with the
 # code in vendor/
@@ -49,7 +47,7 @@ script:
   - megacheck ./...                          # "go vet on steroids" + linter
   - gocyclo -over 19 $GO_FILES               # forbid code with huge functions
   - golint -set_exit_status $(go list ./...) # one last linter
-  - if [ "${LATEST}" = "true" ]; then gox -os="linux" -arch="amd64" -output="logshare.." -ldflags "-X main.Rev=`git rev-parse --short HEAD`" -verbose ./...; fi
+  - gox -os="linux" -arch="amd64" -output="logshare.." -ldflags "-X main.Rev=`git rev-parse --short HEAD`" -verbose ./...
 
 deploy:
   - provider: codedeploy
