@@ -52,6 +52,7 @@ script:
 deploy:
   - provider: codedeploy
     revision_type: github
+    access_key_id: "AKIAI6R35WUYXBEIOTWQ"
     secret_access_key:
       secure: U8Ser7kLNmDCTxHqPPhsaD2obe0wEgTnA2d+7lIJIAIR9PRDq3RP++0sK4P+Wqu1gDW0y3CaKl0xKypkkDIksJXr9kCbc/du8nzL6oXjtkmV+FAKW0VReVE+Mazxywq27UvRgDUV1rmGH7PB3Hml0XvKh1pWrAQQuYX/OWUtmwzzI57XwAkFyhxI3cAHu6WPJTqeiwIfFMD+f5BiXvfzn9Y72i7wxLeeSby/IYgwhUWaKBDuBxNqpOGNmIxaBI9eYTPW/SH/0/ewGH0K9y4zctThlOs3I82m3gwCQD68bell09DWh50CFsg1jzzQPZcl4HFtxB2ozDkqTxHFMWGcAdlKnokdsTBvvmtcATNTcP/HmXAv8fycyJlFFDvebkNywYzzgtR3gb5Qv86n8JT1kH5fYkv0yxjXI+BToBj4cw+5d70UTz7UAHLv93jA+H8C2MiREMqquh+HM+TgVhQw4t+jYqJCyR832LLUVFbdEW5WCuNJmfLe8reswPr1cukfnOqgxk11knIIU5DgNu0Wyo2iMw7zVQ5inRbSkdMfi4kUy71EfTHXS1SQ9Vvao6+0uXwVnex6WMplaRt3bvm+dPoiq0Aa7rR2e0pp9QwIMUG0l7YJHfdGcRyjugAqN33GpvxjM+4/P72PWftW0KdFyFxPSsJX/EptB7sDdJirOEU=
     application: "go-instabot-deploy"
