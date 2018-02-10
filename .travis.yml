@@ -1,7 +1,7 @@
 language: go
 
 go:
-- 1.9
+  - 1.9
 
 install: false
 
@@ -14,13 +14,13 @@ addons:
   ssh_known_hosts: ec2-52-56-94-231.eu-west-2.compute.amazonaws.com
 
 before_install:
-- go get github.com/mitchellh/gox
+  - go get github.com/mitchellh/gox
 
 before_deploy:
-- openssl aes-256-cbc -K $encrypted_4f58803f4606_key -iv $encrypted_4f58803f4606_iv -in deploy_rsa.enc -out /tmp/deploy_rsa -d
-- eval "$(ssh-agent -s)"
-- chmod 600 /tmp/deploy_rsa
-- ssh-add /tmp/deploy_rsa
+  - openssl aes-256-cbc -K $encrypted_4f58803f4606_key -iv $encrypted_4f58803f4606_iv -in deploy_rsa.enc -out /tmp/deploy_rsa -d
+  - eval "$(ssh-agent -s)"
+  - chmod 600 /tmp/deploy_rsa
+  - ssh-add /tmp/deploy_rsa
 
 notifications:
   email: false
@@ -29,23 +29,23 @@ notifications:
       secure: QBxoL4pndpvCeeYMrNn+C6y28tOW0PDPDKASI+HaXI0wgbmngjj3MCB21zulcX2gWIhPylQ7qAFV09xhrOibZeNxlTb57PUJFGrk2jqbcuYEZtxNy2mvh34VEy+kPJYIs08BNUgUoL8EOsVxuPOJbk/uUlW2egqNL7Q2nGS3Ft2XwFwp+bkE3jDk6U5wKUG742dwx1cmsBziHz72FohmUXIZTvV7kJLr7Y+EFI+5l3KdjACYFHHvba6h7NjVwuBNaEr/pLUpRsy15ARWOZWClz+QrZxcjmelMsuf3r5Nbb+X94gEbIAKm1vTffJmjVsJVfo7bKL90fn7quuy3LWLgWfmbWAX3AbqRG/hw+3Juy4To1jcWdvzsXJ6P5CXJt9ndrkuHde3dvswYVrQhE/d25jPFSXD/1WKIB+KMr8//FG5/N88Qwqvc99P7+08Gr8INVy6mJDl8ty+PYd9lVocYiZ7s8oO2yIWhC6GUpiMHgBaBdh7j6BDfhiWCT83giCKfg2bEtnhK1jpNBncljpdUgRN3Ml+w22pPHrDudHsGvQz8EQ02vjlvNFNlahKuvrruKegqBRio6ZdDYWbDhaVln5JlG/zTkAy1TRNXdss6+ieKXlVBCbk4ZgP+WuVnYqpoTvWNVprZiS7PiGiGL6Ihqh3UqSF4w2/6zG1uQ2uxd0=
 
 before_script:
-- GO_FILES=$(find . -iname '*.go' -type f | grep -v /vendor/)
-- go get github.com/golang/lint/golint
-- go get honnef.co/go/tools/cmd/megacheck
-- go get github.com/fzipp/gocyclo
+  - GO_FILES=$(find . -iname '*.go' -type f | grep -v /vendor/)
+  - go get github.com/golang/lint/golint
+  - go get honnef.co/go/tools/cmd/megacheck
+  - go get github.com/fzipp/gocyclo
 
 script:
-- test -z $(gofmt -s -l $GO_FILES)
-- go test -v -race ./...
-- go vet ./...
-- megacheck ./...
-- gocyclo -over 19 $GO_FILES
-- golint -set_exit_status $(go list ./...)
-- gox -os="linux" -arch="amd64" -output="bin/go-instabot" -ldflags "-X main.Rev=`git rev-parse --short HEAD`" -verbose ./...
+  - test -z $(gofmt -s -l $GO_FILES)
+  - go test -v -race ./...
+  - go vet ./...
+  - megacheck ./...
+  - gocyclo -over 19 $GO_FILES
+  - golint -set_exit_status $(go list ./...)
+  - gox -os="linux" -arch="amd64" -output="bin/go-instabot" -ldflags "-X main.Rev=`git rev-parse --short HEAD`" -verbose ./...
 
 deploy:
   provider: script
   skip_cleanup: true
-    script: rsync -r --delete-after --quiet $TRAVIS_BUILD_DIR/bin ubuntu@ec2-52-56-94-231.eu-west-2.compute.amazonaws.com:/home/ubuntu
+  script: rsync -r --delete-after --quiet $TRAVIS_BUILD_DIR/bin ubuntu@ec2-52-56-94-231.eu-west-2.compute.amazonaws.com:/home/ubuntu
   on:
     branch: master
