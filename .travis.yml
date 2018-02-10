@@ -41,11 +41,11 @@ script:
   - megacheck ./...
   - gocyclo -over 19 $GO_FILES
   - golint -set_exit_status $(go list ./...)
-  - gox -os="linux" -arch="amd64" -output=$TRAVIS_REPO_SLUG/go-instabot -ldflags "-X main.Rev=`git rev-parse --short HEAD`" -verbose ./...
+  - gox -os="linux" -arch="amd64" -output=$TRAVIS_REPO_SLUG/$PROJECT_NAME -ldflags "-X main.Rev=`git rev-parse --short HEAD`" -verbose ./...
 
 deploy:
   provider: script
   skip_cleanup: true
-  script: rsync -r --delete-after --quiet $TRAVIS_BUILD_DIR/$TRAVIS_REPO_SLUG/go-instabot ubuntu@ec2-52-56-94-231.eu-west-2.compute.amazonaws.com:/home/ubuntu/$TRAVIS_REPO_SLUG
+  script: rsync -r --delete-after --quiet $TRAVIS_BUILD_DIR/$TRAVIS_REPO_SLUG/$PROJECT_NAME ubuntu@ec2-52-56-94-231.eu-west-2.compute.amazonaws.com:/home/ubuntu/$TRAVIS_REPO_SLUG/$PROJECT_NAME
   on:
     branch: master
