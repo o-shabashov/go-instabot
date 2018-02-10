@@ -46,7 +46,6 @@ script:
 deploy:
   provider: script
   skip_cleanup: true
-  script: rsync -r --relative --delete-after --quiet $TRAVIS_BUILD_DIR/$TRAVIS_REPO_SLUG/$PROJECT_NAME
-  ubuntu@ec2-52-56-94-231.eu-west-2.compute.amazonaws.com:/home/ubuntu
+  script: rsync -r --relative --delete-after --quiet $TRAVIS_BUILD_DIR/$TRAVIS_REPO_SLUG/$PROJECT_NAME ubuntu@ec2-52-56-94-231.eu-west-2.compute.amazonaws.com:/home/ubuntu
   on:
     branch: master
