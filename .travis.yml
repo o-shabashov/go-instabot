@@ -1,27 +1,26 @@
 language: go
 
-# Only the last two Go releases are supported by the Go team with security
-# updates. Any versions older than that should be considered deprecated.
-# Don't bother testing with them. tip builds your code with the latest
-# development version of Go. This can warn you that your code will break
-# in the next version of Go. Don't worry! Later we declare that test runs
-# are allowed to fail on Go tip.
 go:
-  - 1.9
+- 1.9
 
-# Skip the install step. Don't `go get` dependencies. Only build with the
-# code in vendor/
 install: false
 
 matrix:
-  # It's ok if our code fails on unstable development versions of Go.
   allow_failures:
-    - go: master
-  # Wait for tip tests to finish, do not send multiple notifications
+  - go: master
   fast_finish: false
 
+addons:
+  ssh_known_hosts: ec2-52-56-94-231.eu-west-2.compute.amazonaws.com
+
 before_install:
-  - go get github.com/mitchellh/gox
+- go get github.com/mitchellh/gox
+
+before_deploy:
+- openssl aes-256-cbc -K $encrypted_4f58803f4606_key -iv $encrypted_4f58803f4606_iv -in deploy_rsa.enc -out /tmp/deploy_rsa -d
+- eval "$(ssh-agent -s)"
+- chmod 600 /tmp/deploy_rsa
+- ssh-add /tmp/deploy_rsa
 
 notifications:
   email: false
@@ -29,32 +28,24 @@ notifications:
     rooms:
       secure: QBxoL4pndpvCeeYMrNn+C6y28tOW0PDPDKASI+HaXI0wgbmngjj3MCB21zulcX2gWIhPylQ7qAFV09xhrOibZeNxlTb57PUJFGrk2jqbcuYEZtxNy2mvh34VEy+kPJYIs08BNUgUoL8EOsVxuPOJbk/uUlW2egqNL7Q2nGS3Ft2XwFwp+bkE3jDk6U5wKUG742dwx1cmsBziHz72FohmUXIZTvV7kJLr7Y+EFI+5l3KdjACYFHHvba6h7NjVwuBNaEr/pLUpRsy15ARWOZWClz+QrZxcjmelMsuf3r5Nbb+X94gEbIAKm1vTffJmjVsJVfo7bKL90fn7quuy3LWLgWfmbWAX3AbqRG/hw+3Juy4To1jcWdvzsXJ6P5CXJt9ndrkuHde3dvswYVrQhE/d25jPFSXD/1WKIB+KMr8//FG5/N88Qwqvc99P7+08Gr8INVy6mJDl8ty+PYd9lVocYiZ7s8oO2yIWhC6GUpiMHgBaBdh7j6BDfhiWCT83giCKfg2bEtnhK1jpNBncljpdUgRN3Ml+w22pPHrDudHsGvQz8EQ02vjlvNFNlahKuvrruKegqBRio6ZdDYWbDhaVln5JlG/zTkAy1TRNXdss6+ieKXlVBCbk4ZgP+WuVnYqpoTvWNVprZiS7PiGiGL6Ihqh3UqSF4w2/6zG1uQ2uxd0=
 
-# Anything in before_script that returns a nonzero exit code will
-# flunk the build and immediately stop. It's sorta like having
-# set -e enabled in bash.
 before_script:
-  - GO_FILES=$(find . -iname '*.go' -type f | grep -v /vendor/) # All the .go files, excluding vendor/
-  - go get github.com/golang/lint/golint                        # Linter
-  - go get honnef.co/go/tools/cmd/megacheck                     # Badass static analyzer/linter
-  - go get github.com/fzipp/gocyclo
+- GO_FILES=$(find . -iname '*.go' -type f | grep -v /vendor/)
+- go get github.com/golang/lint/golint
+- go get honnef.co/go/tools/cmd/megacheck
+- go get github.com/fzipp/gocyclo
 
-# script always run to completion (set +e). All of these code checks are must haves
-# in a modern Go project.
 script:
-  - test -z $(gofmt -s -l $GO_FILES)         # Fail if a .go file hasn't been formatted with gofmt
-  - go test -v -race ./...                   # Run all the tests with the race detector enabled
-  - go vet ./...                             # go vet is the official Go static analyzer
-  - megacheck ./...                          # "go vet on steroids" + linter
-  - gocyclo -over 19 $GO_FILES               # forbid code with huge functions
-  - golint -set_exit_status $(go list ./...) # one last linter
-  - gox -os="linux" -arch="amd64" -output="bin/go-instabot" -ldflags "-X main.Rev=`git rev-parse --short HEAD`" -verbose ./...
+- test -z $(gofmt -s -l $GO_FILES)
+- go test -v -race ./...
+- go vet ./...
+- megacheck ./...
+- gocyclo -over 19 $GO_FILES
+- golint -set_exit_status $(go list ./...)
+- gox -os="linux" -arch="amd64" -output="bin/go-instabot" -ldflags "-X main.Rev=`git rev-parse --short HEAD`" -verbose ./...
 
 deploy:
-  - provider: s3
-    access_key_id: AKIAI6R35WUYXBEIOTWQ
-    secret_access_key:
-      secure: JPijoLoYos3eJ6JB7xNuetobVr90RiG9tgLr5ePykzRtyfYrsKkCNtxj9mdhuLqJDZo+T0mvl33fJPAKkPq3cJg5UW5MGISC+VWi8i3W8SIAE0Iz0AxvdMeI6wUntRPX6StazgUBAVACjdrAsx01BNzTOE3FCs1bFMsBwrLV1QrTj9fPBHNqH2cT/P8NS5aDYvUtFaiKUv3sO4lXXfbsrG+lASVTzTfW1ukP8iblZzM+oPieG638jllNnVy//S4PButrkFku4SvtzrhjlVYrI+OBoDNzkQq1yFKlnmoEyIWJ9oXZsWCFpdtrCR7EtngQxWjZA09bXpxlG+t12lbLv+vY81LzyyaM39LufVdCLHonjYkLvk0LJ0gokAuWifxUhL3WRGJ0yeYFjVqGSi7fSHERvO6dB/Iq/OLyztsDOoUErmMRHDwEK6k6Dy0+UoMXk9RYlmZYWo9uevQEC9B3UYk31HBEFPe5M9be/nTUsqcLIoizrcSysxz8wP2d2OciKd5cf8nYP0cCERYKOcpEhv4M8UKaqiZrwn3lZ0HnfM80hGaIG/brzkTnmwZVDULcgjzADaldGzs0pjFIRuRlmplhWaY2nGed2Mu1cqkL1Mwmu8xfKQjlQQlss8bpDZ36zr55T42mGA3h2a99SPMJJ3jwIb4viBtrgh3Rg7qM71A=
-    bucket: golang-builds
-    region: eu-west-2
-    skip_cleanup: true
-    upload-dir: go-instabot
+  provider: script
+  skip_cleanup: true
+    script: rsync -r --delete-after --quiet $TRAVIS_BUILD_DIR/bin ubuntu@ec2-52-56-94-231.eu-west-2.compute.amazonaws.com:/home/ubuntu
+  on:
+    branch: master
