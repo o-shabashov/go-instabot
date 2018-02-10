@@ -50,11 +50,9 @@ script:
   - gox -os="linux" -arch="amd64" -output="logshare.." -ldflags "-X main.Rev=`git rev-parse --short HEAD`" -verbose ./...
 
 deploy:
-  - provider: codedeploy
-    revision_type: github
+  - provider: s3
     access_key_id: AKIAI6R35WUYXBEIOTWQ
     secret_access_key:
       secure: JPijoLoYos3eJ6JB7xNuetobVr90RiG9tgLr5ePykzRtyfYrsKkCNtxj9mdhuLqJDZo+T0mvl33fJPAKkPq3cJg5UW5MGISC+VWi8i3W8SIAE0Iz0AxvdMeI6wUntRPX6StazgUBAVACjdrAsx01BNzTOE3FCs1bFMsBwrLV1QrTj9fPBHNqH2cT/P8NS5aDYvUtFaiKUv3sO4lXXfbsrG+lASVTzTfW1ukP8iblZzM+oPieG638jllNnVy//S4PButrkFku4SvtzrhjlVYrI+OBoDNzkQq1yFKlnmoEyIWJ9oXZsWCFpdtrCR7EtngQxWjZA09bXpxlG+t12lbLv+vY81LzyyaM39LufVdCLHonjYkLvk0LJ0gokAuWifxUhL3WRGJ0yeYFjVqGSi7fSHERvO6dB/Iq/OLyztsDOoUErmMRHDwEK6k6Dy0+UoMXk9RYlmZYWo9uevQEC9B3UYk31HBEFPe5M9be/nTUsqcLIoizrcSysxz8wP2d2OciKd5cf8nYP0cCERYKOcpEhv4M8UKaqiZrwn3lZ0HnfM80hGaIG/brzkTnmwZVDULcgjzADaldGzs0pjFIRuRlmplhWaY2nGed2Mu1cqkL1Mwmu8xfKQjlQQlss8bpDZ36zr55T42mGA3h2a99SPMJJ3jwIb4viBtrgh3Rg7qM71A=
-    application: go-instabot-deploy
-    deployment_group: go-instabot-deploy-group
+    bucket: golang-builds
     region: eu-west-2
