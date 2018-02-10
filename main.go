@@ -87,37 +87,32 @@ func likeFriendsFeed() {
 			if !item.HasLiked {
 				insta.Like(item.ID)
 				time.Sleep(20 * time.Second)
-				report = append(report, user.FullName+" has been liked")
+
+				name := user.Username
+				if user.FullName != "" {
+					name = user.FullName
+				}
+				report = append(report, name+" has been liked")
 			}
 		}
 	}
 
-	Slack(strings.Join(report, "\n"), true)
+	Slack(strings.Join(report, "\n"))
 }
 
 func check(err error) {
 	if err != nil {
-		Slack(err.Error(), false)
+		Slack(err.Error())
 	}
 }
 
 // Slack send message
-func Slack(body string, success bool) {
-	status := func() string {
-		if success {
-			return "Success"
-		}
-		return "Failure"
-	}()
-
-	attachment := slack.Attachment{}
-	attachment.AddField(slack.Field{Title: "Status", Value: status})
+func Slack(body string) {
 	payload := slack.Payload{
-		Text:        body,
-		Username:    "Insta-bot",
-		Channel:     "#general",
-		IconEmoji:   ":sunrise_over_mountains:",
-		Attachments: []slack.Attachment{attachment},
+		Text:      body,
+		Username:  "Insta-bot",
+		Channel:   "#general",
+		IconEmoji: ":sunrise_over_mountains:",
 	}
 	err := slack.Send(os.Getenv("SLACK"), "", payload)
 	if len(err) > 0 {
