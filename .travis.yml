@@ -1,7 +1,7 @@
 language: go
 
 go:
-  - 1.9
+  - 1.13
 
 install: false
 
@@ -11,7 +11,7 @@ matrix:
   fast_finish: false
 
 addons:
-  ssh_known_hosts: ec2-52-56-94-231.eu-west-2.compute.amazonaws.com
+  ssh_known_hosts: ec2-3-8-115-141.eu-west-2.compute.amazonaws.com
 
 before_install:
   - go get github.com/mitchellh/gox
@@ -46,6 +46,6 @@ script:
 deploy:
   provider: script
   skip_cleanup: true
-  script: rsync -r --rsync-path="mkdir -p /home/ubuntu/$TRAVIS_REPO_SLUG && rsync" --delete-after --quiet $TRAVIS_BUILD_DIR/$TRAVIS_REPO_SLUG/$PROJECT_NAME ubuntu@ec2-52-56-94-231.eu-west-2.compute.amazonaws.com:/home/ubuntu/$TRAVIS_REPO_SLUG/$PROJECT_NAME
+  script: rsync -r --rsync-path="mkdir -p /home/ubuntu/$TRAVIS_REPO_SLUG && rsync" --delete-after --quiet $TRAVIS_BUILD_DIR/$TRAVIS_REPO_SLUG/$PROJECT_NAME ec2-3-8-115-141.eu-west-2.compute.amazonaws.com:/home/ubuntu/$TRAVIS_REPO_SLUG/$PROJECT_NAME
   on:
     branch: master
